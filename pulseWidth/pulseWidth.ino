@@ -1,3 +1,6 @@
+#include <Wire.h>
+#include <Audio.h>
+#include <MIDI.h>
 #include <BALibrary.h>
 #include <effect_ensemble.h>
 
