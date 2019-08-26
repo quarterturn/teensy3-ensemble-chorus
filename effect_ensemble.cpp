@@ -93,17 +93,17 @@ void AudioEffectEnsemble::update()
     int isChL = 1;
 
 	blockL = receiveReadOnly(0);
-//    if (!blockL)
-//    {
-//        release(blockL);
-//        isChL = 0;
-//    }
+    if (!blockL)
+    {
+        release(blockL);
+        isChL = 0;
+    }
     blockR = receiveReadOnly(1);
-//    if (!blockR)
-//    {
-//        release(blockR);
-//        isChR = 0;
-//    }
+    if (!blockR)
+    {
+        release(blockR);
+        isChR = 0;
+    }
     
     // allocate memory as needed
     if (isChL)
@@ -246,11 +246,11 @@ void AudioEffectEnsemble::update()
         }
     }
     if (isChL)
-        //transmit(outblockL, 0);
-        transmit(blockL, 0);
+        transmit(outblockL, 0);
+        //transmit(blockL, 0);
     if (isChR)
-        //transmit(outblockR, 1);
-        transmit(blockR, 0);
+        transmit(outblockR, 1);
+        //transmit(blockR, 0);
 	release(outblockL);
 	release(outblockR);
 
