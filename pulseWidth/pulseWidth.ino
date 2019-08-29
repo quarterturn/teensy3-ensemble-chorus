@@ -17,9 +17,10 @@ AudioEffectEnvelope      envelope1;      //xy=371,237
 AudioEffectEnsemble      ensemble1;     //xy=379,489
 
 AudioConnection          patchCord1(waveform1, envelope1);
-AudioConnection          patchCord2(envelope1, ensemble1);
-AudioConnection          leftOut(ensemble1, 0, i2s1, 0);
-AudioConnection          rightOut(ensemble1, 0, i2s1, 1);
+//AudioConnection          patchCord2(envelope1, ensemble1);
+//AudioConnection          leftOut(ensemble1, 0, i2s1, 0);
+//AudioConnection          rightOut(ensemble1, 0, i2s1, 1);
+AudioConnection          leftOut(envelope1, 0, i2s1, 0);
 
 
 
@@ -36,9 +37,6 @@ void setup(void)
   // Disable the codec first
   codec.disable();
   delay(100);
-  AudioMemory(128);
-  delay(5);
-
   // Enable the codec
   Serial.println("Enabling codec...\n");
   codec.enable();

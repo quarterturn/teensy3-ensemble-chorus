@@ -68,12 +68,48 @@ AudioEffectEnsemble::AudioEffectEnsemble() : AudioStream(1, inputQueueArray)
     
 }
 
+// TODO: move this to one of the data files, use in output_adat.cpp, output_tdm.cpp, etc
+static const audio_block_t zeroblock = {
+    0, 0, 0, {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#if AUDIO_BLOCK_SAMPLES > 16
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 32
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 48
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 64
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 80
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 96
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+#if AUDIO_BLOCK_SAMPLES > 112
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#endif
+    } };
+
 void AudioEffectEnsemble::update(void)
 {
-	audio_block_t *block;
+	const audio_block_t *block;
+    audio_block_t *outblock;
 	uint16_t i;
 
-	block = receiveWritable(0);
+    outblock = allocate();
+    if (!outblock) {
+        audio_block_t *tmp = receiveReadOnly(0);
+        if (tmp) release(tmp);
+        return;
+    }
+	block = receiveReadOnly(0);
+    if (!block)
+        block = &zeroblock;
 
     // buffer the incoming block
     for (i=0; i < AUDIO_BLOCK_SAMPLES; i++)
@@ -152,13 +188,14 @@ void AudioEffectEnsemble::update(void)
 
         // combine delayed samples into output
         // add the delayed and scaled samples
-        block->data[i] = 16384 + (delayBuffer[offsetIndex1] >> 2) + (delayBuffer[offsetIndex2] >> 2) + (delayBuffer[offsetIndex3] >> 2);
+        outblock->data[i] = 16384 + (delayBuffer[offsetIndex1] >> 2) + (delayBuffer[offsetIndex2] >> 2) + (delayBuffer[offsetIndex3] >> 2);
 
     }
-    Serial.println("next is transmit");
-    transmit(block, 0);
-    Serial.println("transmit done");
-	release(block);
+
+    transmit(outblock);
+    release(outblock);
+    if (block != &zeroblock) release((audio_block_t *)block);
+
     
     return;
 
