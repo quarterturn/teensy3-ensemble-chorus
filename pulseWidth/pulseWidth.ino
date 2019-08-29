@@ -2,7 +2,6 @@
 #include <Audio.h>
 #include <MIDI.h>
 #include <BALibrary.h>
-#include <effect_ensemble.h>
 
 // demonstrate pulse with slow changes in pulse width
 
@@ -10,6 +9,7 @@ using namespace BALibrary;
 
 AudioOutputI2S i2s1;
 BAAudioControlWM8731 codec;
+
 
 // GUItool: begin automatically generated code
 AudioSynthWaveform       waveform1;      //xy=188,240
@@ -20,6 +20,8 @@ AudioConnection          patchCord1(waveform1, envelope1);
 AudioConnection          patchCord2(envelope1, ensemble1);
 AudioConnection          leftOut(ensemble1, 0, i2s1, 0);
 AudioConnection          rightOut(ensemble1, 0, i2s1, 1);
+
+
 
 // GUItool: end automatically generated code
 
