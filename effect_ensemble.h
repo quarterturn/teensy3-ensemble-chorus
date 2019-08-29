@@ -38,18 +38,13 @@
 class AudioEffectEnsemble : public AudioStream
 {
 public:
-	AudioEffectEnsemble();
-	virtual void update();
+    AudioEffectEnsemble(void);
+	virtual void update(void);
 	
 private:
 	audio_block_t *inputQueueArray[1];
-    // left and right buffers for each phase
-    int16_t delayBuffer1L[BUFFER_SIZE];
-    int16_t delayBuffer1R[BUFFER_SIZE];
-    int16_t delayBuffer2L[BUFFER_SIZE];
-    int16_t delayBuffer2R[BUFFER_SIZE];
-    int16_t delayBuffer3L[BUFFER_SIZE];
-    int16_t delayBuffer3R[BUFFER_SIZE];
+    // buffers
+    int16_t delayBuffer[BUFFER_SIZE];
     
     // LFO wavetable until I resolve progmem issues
     int16_t lfoTable[LFO_SAMPLES];
@@ -57,33 +52,25 @@ private:
     // input index
     int16_t inIndex;
     // output indexes
-    // default to center of buffer
+    // default to csenter of buffer
     int16_t outIndex1;
     int16_t outIndex2;
     int16_t outIndex3;
     // lfo index
     // seprated by thirds to approximate 120 degree phase relationship
-    int16_t lfoIndex1L;
-    int16_t lfoIndex2L;
-    int16_t lfoIndex3L;
-    int16_t lfoIndex1R;
-    int16_t lfoIndex2R;
-    int16_t lfoIndex3R;
+    int16_t lfoIndex1;
+    int16_t lfoIndex2;
+    int16_t lfoIndex3;
+
     // lfo rate counter
     int16_t lfoCount;
     // output index offset
-    int16_t offset1L;
-    int16_t offset2L;
-    int16_t offset3L;
-    int16_t offsetIndex1L;
-    int16_t offsetIndex2L;
-    int16_t offsetIndex3L;
-    int16_t offset1R;
-    int16_t offset2R;
-    int16_t offset3R;
-    int16_t offsetIndex1R;
-    int16_t offsetIndex2R;
-    int16_t offsetIndex3R;
+    int16_t offset1;
+    int16_t offset2;
+    int16_t offset3;
+    int16_t offsetIndex1;
+    int16_t offsetIndex2;
+    int16_t offsetIndex3;
     
     int16_t iC;
     
