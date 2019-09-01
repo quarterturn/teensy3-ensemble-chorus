@@ -61,7 +61,7 @@ AudioEffectEnsemble::AudioEffectEnsemble() : AudioStream(1, inputQueueArray)
     // generate the LFO wavetable
     for (iC = 0; iC < LFO_SAMPLES; iC++)
     {
-        lfoTable[iC] = round(((sin(((2.0 * M_PI)/LFO_SAMPLES) * iC) * LFO_RANGE) / 2.0) + (((sin(((20.0 * M_PI)/LFO_SAMPLES) * iC)) * LFO_RANGE) / 4.7));
+        lfoTable[iC] = round(((sin(((2.0 * M_PI)/LFO_SAMPLES) * iC) * LFO_RANGE) / 2.0) + (((sin(((20.0 * M_PI)/LFO_SAMPLES) * iC)) * LFO_RANGE) / 3.5));
     }
     
     return;
