@@ -25,7 +25,7 @@
 
 #include <Arduino.h>
 #include "AudioStream.h"
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 512
 // to put a channel 90 degrees out of LFO phase for stereo spread
 #define PHASE_90 367
 #define LFO_SIZE 1470

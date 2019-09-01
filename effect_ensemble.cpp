@@ -39,9 +39,9 @@ AudioEffectEnsemble::AudioEffectEnsemble() : AudioStream(1, inputQueueArray)
     inIndex = 0;
     // output indexes
     // default to center of buffer
-    outIndex1 = 1023;
-    outIndex2 = 1023;
-    outIndex3 = 1023;
+    outIndex1 = 256;
+    outIndex2 = 256;
+    outIndex3 = 256;
     // lfo index
     // seprated by thirds to approximate 120 degree phase relationship
     lfoIndex1 = 0;
