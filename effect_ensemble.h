@@ -25,7 +25,7 @@
 
 #include <Arduino.h>
 #include "AudioStream.h"
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 1024
 // to put a channel 90 degrees out of LFO phase for stereo spread
 #define PHASE_90 367
 #define LFO_SIZE 1470
@@ -33,7 +33,7 @@
 
 // LFO wavetable parameters
 #define LFO_SAMPLES 1470
-#define LFO_RANGE 75
+#define LFO_RANGE 110
 
 class AudioEffectEnsemble : public AudioStream
 {
@@ -71,6 +71,9 @@ private:
     int16_t offsetIndex1;
     int16_t offsetIndex2;
     int16_t offsetIndex3;
+    int16_t offsetIndex1B;
+    int16_t offsetIndex2B;
+    int16_t offsetIndex3B;
     
     int16_t iC;
     

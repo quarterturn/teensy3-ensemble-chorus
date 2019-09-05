@@ -39,9 +39,9 @@ AudioEffectEnsemble::AudioEffectEnsemble() : AudioStream(1, inputQueueArray)
     inIndex = 0;
     // output indexes
     // default to center of buffer
-    outIndex1 = 256;
-    outIndex2 = 256;
-    outIndex3 = 256;
+    outIndex1 = 512;
+    outIndex2 = 512;
+    outIndex3 = 512;
     // lfo index
     // seprated by thirds to approximate 120 degree phase relationship
     lfoIndex1 = 0;
@@ -57,11 +57,14 @@ AudioEffectEnsemble::AudioEffectEnsemble() : AudioStream(1, inputQueueArray)
     offsetIndex1 = 0;
     offsetIndex2 = 0;
     offsetIndex3 = 0;
+    offsetIndex1B = 0;
+    offsetIndex2B = 0;
+    offsetIndex3B = 0;
     
     // generate the LFO wavetable
     for (iC = 0; iC < LFO_SAMPLES; iC++)
     {
-        lfoTable[iC] = round(((sin(((2.0 * M_PI)/LFO_SAMPLES) * iC) * LFO_RANGE) / 2.0) + (((sin(((20.0 * M_PI)/LFO_SAMPLES) * iC)) * LFO_RANGE) / 3.5));
+        lfoTable[iC] = round(((sin(((2.0 * M_PI)/LFO_SAMPLES) * iC) * LFO_RANGE) / 2.0) + (((sin(((20.0 * M_PI)/LFO_SAMPLES) * iC)) * LFO_RANGE) / 3.0));
     }
     
     return;
@@ -99,10 +102,12 @@ void AudioEffectEnsemble::update(void)
 {
 	const audio_block_t *block;
     audio_block_t *outblock;
+    audio_block_t *outblockB;
 	uint16_t i;
 
     outblock = allocate();
-    if (!outblock) {
+    outblockB = allocate();
+    if ((!outblock) || (!outblockB)) {
         audio_block_t *tmp = receiveReadOnly(0);
         if (tmp) release(tmp);
         return;
@@ -168,6 +173,9 @@ void AudioEffectEnsemble::update(void)
         offsetIndex1 = outIndex1 + offset1;
         offsetIndex2 = outIndex2 + offset2;
         offsetIndex3 = outIndex3 + offset3;
+        offsetIndex1B = outIndex1 + offset1 + PHASE_90;
+        offsetIndex2B = outIndex2 + offset2 + PHASE_90;
+        offsetIndex3B = outIndex3 + offset3 + PHASE_90;
 
 
         // wrap the index if it goes past the end of the buffer
@@ -185,15 +193,34 @@ void AudioEffectEnsemble::update(void)
             offsetIndex2 = BUFFER_SIZE + offsetIndex2;
         if (offsetIndex3 < 0)
             offsetIndex3 = BUFFER_SIZE + offsetIndex3;
+        
+        // wrap the index if it goes past the end of the buffer
+        if (offsetIndex1B > (BUFFER_SIZE - 1))
+            offsetIndex1B = offsetIndex1B - BUFFER_SIZE;
+        if (offsetIndex2B > (BUFFER_SIZE - 1))
+            offsetIndex2B = offsetIndex2B - BUFFER_SIZE;
+        if (offsetIndex3B > (BUFFER_SIZE - 1))
+            offsetIndex3B = offsetIndex3B - BUFFER_SIZE;
+        
+        // wrap the index if it goes past the buffer the other way
+        if (offsetIndex1B < 0)
+            offsetIndex1B = BUFFER_SIZE + offsetIndex1B;
+        if (offsetIndex2B < 0)
+            offsetIndex2B = BUFFER_SIZE + offsetIndex2B;
+        if (offsetIndex3B < 0)
+            offsetIndex3B = BUFFER_SIZE + offsetIndex3B;
 
         // combine delayed samples into output
         // add the delayed and scaled samples
-        outblock->data[i] = 16384 + (delayBuffer[offsetIndex1] >> 2) + (delayBuffer[offsetIndex2] >> 2) + (delayBuffer[offsetIndex3] >> 2);
+        outblock->data[i] = int(round((delayBuffer[offsetIndex1] + delayBuffer[offsetIndex2] + delayBuffer[offsetIndex3]) / 3.0));
+        outblockB->data[i] = int(round((delayBuffer[offsetIndex1B] + delayBuffer[offsetIndex2B] + delayBuffer[offsetIndex3B]) / 3.0));
 
     }
 
-    transmit(outblock);
+    transmit(outblock, 0);
+    transmit(outblockB, 1);
     release(outblock);
+    release(outblockB);
     if (block != &zeroblock) release((audio_block_t *)block);
 
     
