@@ -25,15 +25,15 @@
 
 #include <Arduino.h>
 #include "AudioStream.h"
-#define BUFFER_SIZE 1024
+#define ENSEMBLE_BUFFER_SIZE 1024
 // to put a channel 90 degrees out of LFO phase for stereo spread
 #define PHASE_90 367
 #define LFO_SIZE 1470
-#define COUNTS_PER_LFO 100
+#define COUNTS_PER_LFO 200
 
 // LFO wavetable parameters
 #define LFO_SAMPLES 1470
-#define LFO_RANGE 110
+#define LFO_RANGE 100
 
 class AudioEffectEnsemble : public AudioStream
 {
@@ -44,7 +44,7 @@ public:
 private:
 	audio_block_t *inputQueueArray[1];
     // buffers
-    int16_t delayBuffer[BUFFER_SIZE];
+    int16_t delayBuffer[ENSEMBLE_BUFFER_SIZE];
     
     // LFO wavetable until I resolve progmem issues
     int16_t lfoTable[LFO_SAMPLES];

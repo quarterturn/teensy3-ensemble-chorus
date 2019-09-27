@@ -1,15 +1,9 @@
 /* Audio Library for Teensy 3.X
  * Copyright (c) 2019, Alexander Davis info@matrixwide.com
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice, development funding notice, and this permission
- * notice shall be included in all copies or substantial portions of the Software.
+ * Permission is hereby granted for non-commercial use only.
+ * You may not use this code in any product offered for sale without the
+ * expresss written approval of the author.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -122,7 +116,7 @@ void AudioEffectEnsemble::update(void)
 
         // wrap the input index
         inIndex++;
-        if (inIndex > (BUFFER_SIZE - 1))
+        if (inIndex > (ENSEMBLE_BUFFER_SIZE - 1))
             inIndex = 0;
 
         delayBuffer[inIndex] = block->data[i];
@@ -153,15 +147,15 @@ void AudioEffectEnsemble::update(void)
 
         // wrap the output index
         outIndex1++;
-        if (outIndex1 > (BUFFER_SIZE - 1))
+        if (outIndex1 > (ENSEMBLE_BUFFER_SIZE - 1))
             outIndex1 = 0;
 
         outIndex2++;
-        if (outIndex2 > (BUFFER_SIZE - 1))
+        if (outIndex2 > (ENSEMBLE_BUFFER_SIZE - 1))
             outIndex2 = 0;
 
         outIndex3++;
-        if (outIndex3 > (BUFFER_SIZE - 1))
+        if (outIndex3 > (ENSEMBLE_BUFFER_SIZE - 1))
             outIndex3 = 0;
 
         // get the delay from the wavetable
@@ -179,36 +173,36 @@ void AudioEffectEnsemble::update(void)
 
 
         // wrap the index if it goes past the end of the buffer
-        if (offsetIndex1 > (BUFFER_SIZE - 1))
-            offsetIndex1 = offsetIndex1 - BUFFER_SIZE;
-        if (offsetIndex2 > (BUFFER_SIZE - 1))
-            offsetIndex2 = offsetIndex2 - BUFFER_SIZE;
-        if (offsetIndex3 > (BUFFER_SIZE - 1))
-            offsetIndex3 = offsetIndex3 - BUFFER_SIZE;
+        if (offsetIndex1 > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex1 = offsetIndex1 - ENSEMBLE_BUFFER_SIZE;
+        if (offsetIndex2 > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex2 = offsetIndex2 - ENSEMBLE_BUFFER_SIZE;
+        if (offsetIndex3 > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex3 = offsetIndex3 - ENSEMBLE_BUFFER_SIZE;
 
         // wrap the index if it goes past the buffer the other way
         if (offsetIndex1 < 0)
-            offsetIndex1 = BUFFER_SIZE + offsetIndex1;
+            offsetIndex1 = ENSEMBLE_BUFFER_SIZE + offsetIndex1;
         if (offsetIndex2 < 0)
-            offsetIndex2 = BUFFER_SIZE + offsetIndex2;
+            offsetIndex2 = ENSEMBLE_BUFFER_SIZE + offsetIndex2;
         if (offsetIndex3 < 0)
-            offsetIndex3 = BUFFER_SIZE + offsetIndex3;
+            offsetIndex3 = ENSEMBLE_BUFFER_SIZE + offsetIndex3;
         
         // wrap the index if it goes past the end of the buffer
-        if (offsetIndex1B > (BUFFER_SIZE - 1))
-            offsetIndex1B = offsetIndex1B - BUFFER_SIZE;
-        if (offsetIndex2B > (BUFFER_SIZE - 1))
-            offsetIndex2B = offsetIndex2B - BUFFER_SIZE;
-        if (offsetIndex3B > (BUFFER_SIZE - 1))
-            offsetIndex3B = offsetIndex3B - BUFFER_SIZE;
+        if (offsetIndex1B > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex1B = offsetIndex1B - ENSEMBLE_BUFFER_SIZE;
+        if (offsetIndex2B > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex2B = offsetIndex2B - ENSEMBLE_BUFFER_SIZE;
+        if (offsetIndex3B > (ENSEMBLE_BUFFER_SIZE - 1))
+            offsetIndex3B = offsetIndex3B - ENSEMBLE_BUFFER_SIZE;
         
         // wrap the index if it goes past the buffer the other way
         if (offsetIndex1B < 0)
-            offsetIndex1B = BUFFER_SIZE + offsetIndex1B;
+            offsetIndex1B = ENSEMBLE_BUFFER_SIZE + offsetIndex1B;
         if (offsetIndex2B < 0)
-            offsetIndex2B = BUFFER_SIZE + offsetIndex2B;
+            offsetIndex2B = ENSEMBLE_BUFFER_SIZE + offsetIndex2B;
         if (offsetIndex3B < 0)
-            offsetIndex3B = BUFFER_SIZE + offsetIndex3B;
+            offsetIndex3B = ENSEMBLE_BUFFER_SIZE + offsetIndex3B;
 
         // combine delayed samples into output
         // add the delayed and scaled samples
